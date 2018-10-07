@@ -17,10 +17,12 @@ public class KdTree {
         private final boolean isXOriented; // is this node x or y oriented?
         private Node lb;        // the left/bottom subtree
         private Node rt;        // the right/top subtree
+        private int size;       // size of tree rooted at this node
 
         public Node(Point2D p, boolean isXOriented) {
             this.p = p;
             this.isXOriented = isXOriented;
+            this.size = 1;
         }
     }
 
@@ -38,7 +40,7 @@ public class KdTree {
     }
 
     private int size(Node node) {
-        return node == null ? 0 : 1 + size(node.lb) + size(node.rt);
+        return node == null ? 0 : node.size;
     }
 
     // add the point to the set (if it is not already in the set)
@@ -56,6 +58,7 @@ public class KdTree {
         if (insertIntoLeftBottom) node.lb = insert(node.lb, p, node.isXOriented);
         else                      node.rt = insert(node.rt, p, node.isXOriented);
 
+        node.size = 1 + size(node.lb) + size(node.rt);
         return node;
     }
 
