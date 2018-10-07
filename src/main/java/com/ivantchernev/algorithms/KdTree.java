@@ -21,7 +21,7 @@ public class KdTree {
         }
     }
 
-    Node root;
+    private Node root;
 
     // construct an empty set of points
     public KdTree() { }
