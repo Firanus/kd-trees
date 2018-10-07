@@ -5,8 +5,6 @@ import java.util.TreeSet;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.Stack;
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.In;
 
 public class PointSET {
 
@@ -43,9 +41,6 @@ public class PointSET {
 
     // draw all points to standard draw
     public void draw() {
-        StdDraw.setPenColor(StdDraw.BLACK);
-        StdDraw.setPenRadius(0.01);
-
         for (Point2D p : treeSet) {
             p.draw();
         }
