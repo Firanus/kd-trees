@@ -64,6 +64,17 @@ class KdTreeTest {
         assertEquals(7, set.size());
     }
 
+    @Test
+    void insertOnlyAllowsOneCopyOfIdenticalItemsToBeAdded() {
+        KdTree set = new KdTree();
+
+        set.insert(new Point2D(0.3,0.9));
+        set.insert(new Point2D(0.3,0.9));
+        set.insert(new Point2D(0.3,0.9));
+
+        assertEquals(1, set.size());
+    }
+
     // contains tests
 
     @Test

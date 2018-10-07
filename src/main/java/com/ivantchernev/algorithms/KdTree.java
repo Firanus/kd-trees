@@ -46,6 +46,7 @@ public class KdTree {
     // add the point to the set (if it is not already in the set)
     public void insert(Point2D p) {
         if (p == null) throw new IllegalArgumentException();
+        if(contains(p)) return;
 
         root = insert(root, p, false);
     }
