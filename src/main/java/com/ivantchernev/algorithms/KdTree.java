@@ -5,6 +5,8 @@ import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
 
+import java.awt.*;
+
 public class KdTree {
 
     private static class Node {
@@ -76,7 +78,45 @@ public class KdTree {
 
     // draw all points to standard draw
     public void draw() {
+        drawLine(0,0,1,0, StdDraw.BLACK);
+        drawLine(0,0,0,1, StdDraw.BLACK);
+        drawLine(0,1,1,1, StdDraw.BLACK);
+        drawLine(1,0,1,1, StdDraw.BLACK);
+        draw(root, new RectHV(0,0,1,1));
+    }
 
+    private void draw(Node node, RectHV limitRectangle) {
+        if (node == null) return;
+
+        // drawing code
+        drawPoint(node.p);
+
+        Color lineColor = node.isXOriented ? StdDraw.RED : StdDraw.BLUE;
+        if (node.isXOriented) drawLine(node.p.x(), limitRectangle.ymax(), node.p.x(), limitRectangle.ymin(), lineColor);
+        else                  drawLine(limitRectangle.xmax(), node.p.y(), limitRectangle.xmin(), node.p.y(), lineColor);
+
+        // recurse through tree
+        if (node.isXOriented) {
+            draw(node.lb, new RectHV(limitRectangle.xmin(), limitRectangle.ymin(), node.p.x(), limitRectangle.ymax()));
+            draw(node.rt, new RectHV(node.p.x(), limitRectangle.ymin(), limitRectangle.xmax(), limitRectangle.ymax()));
+        } else {
+            draw(node.lb, new RectHV(limitRectangle.xmin(), limitRectangle.ymin(), limitRectangle.xmax(), node.p.y()));
+            draw(node.rt, new RectHV(limitRectangle.xmin(), node.p.y(), limitRectangle.xmax(), limitRectangle.ymax()));
+        }
+    }
+
+    private void drawPoint(Point2D p) {
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(0.01);
+
+        p.draw();
+    }
+
+    private void drawLine(double x0, double y0, double x1, double y1, Color color) {
+        StdDraw.setPenColor(color);
+        StdDraw.setPenRadius(0.001);
+
+        StdDraw.line(x0,y0,x1,y1);
     }
 
     // all points that are inside the rectangle (or on the boundary)
