@@ -44,13 +44,13 @@ public class KdTree {
     // add the point to the set (if it is not already in the set)
     public void insert(Point2D p) {
         if (p == null) throw new IllegalArgumentException();
-        if(contains(p)) return;
+        if (contains(p)) return;
 
         root = insert(root, p, false);
     }
 
     private Node insert(Node node, Point2D p, boolean parentIsXOriented) {
-        if(node == null) return new Node(p, !parentIsXOriented);
+        if (node == null) return new Node(p, !parentIsXOriented);
 
         boolean insertIntoLeftBottom = node.isXOriented ? p.x() < node.p.x() : p.y() < node.p.y();
         if (insertIntoLeftBottom) node.lb = insert(node.lb, p, node.isXOriented);
@@ -109,7 +109,7 @@ public class KdTree {
     private void drawLine(double x0, double y0, double x1, double y1, Color color) {
         setPenColor(color);
         StdDraw.setPenRadius(0.001);
-        StdDraw.line(x0,y0,x1,y1);
+        StdDraw.line(x0, y0, x1, y1);
     }
 
     private void setPenColor(Color color) {
