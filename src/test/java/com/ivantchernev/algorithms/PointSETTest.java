@@ -49,6 +49,21 @@ class PointSETTest {
         assertThrows(IllegalArgumentException.class, () -> new PointSET().insert(null));
     }
 
+    @Test
+    void insertAllowsItemsWithIdenticalXElementsToBeAdded() {
+        PointSET set = new PointSET();
+
+        set.insert(new Point2D(0.3,0.9));
+        set.insert(new Point2D(0.3,0.1));
+        set.insert(new Point2D(0.3,0.2));
+        set.insert(new Point2D(0.3,0.8));
+        set.insert(new Point2D(0.3,0.4));
+        set.insert(new Point2D(0.3,0.7));
+        set.insert(new Point2D(0.3,0.5));
+
+        assertEquals(7, set.size());
+    }
+
     // contains tests
 
     @Test

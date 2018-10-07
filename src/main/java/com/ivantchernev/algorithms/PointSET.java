@@ -10,7 +10,7 @@ public class PointSET {
 
     // construct an empty set of points
     public PointSET() {
-        treeSet = new TreeSet<>(Point2D.X_ORDER);
+        treeSet = new TreeSet<>();
     }
 
     // is the set empty?
