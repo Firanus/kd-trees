@@ -15,8 +15,6 @@ class KdTreeTest {
         assertTrue(new KdTree().isEmpty());
     }
 
-
-
     @Test
     void isEmptyReturnsFalseWhenSetContainsItems() {
         KdTree set = new KdTree();

@@ -23,11 +23,13 @@ public class KdTree {
 
     // add the point to the set (if it is not already in the set)
     public void insert(Point2D p) {
-
+        if (p == null) throw new IllegalArgumentException();
     }
 
     // does the set contain point p?
     public boolean contains(Point2D p) {
+        if (p == null) throw new IllegalArgumentException();
+
         return false;
     }
 
@@ -38,11 +40,15 @@ public class KdTree {
 
     // all points that are inside the rectangle (or on the boundary)
     public Iterable<Point2D> range(RectHV rect) {
+        if (rect == null) throw new IllegalArgumentException();
+
         return null;
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
     public Point2D nearest(Point2D p) {
+        if (p == null) throw new IllegalArgumentException();
+
         return null;
     }
 
