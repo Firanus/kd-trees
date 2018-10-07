@@ -1,9 +1,6 @@
 package com.ivantchernev.algorithms;
 
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.*;
 
 import java.awt.*;
 
@@ -124,7 +121,21 @@ public class KdTree {
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) throw new IllegalArgumentException();
 
-        return null;
+        Stack<Point2D> intersectionPoints = new Stack<>();
+        return range(root, intersectionPoints, rect);
+    }
+
+    private Stack<Point2D> range(Node node, Stack<Point2D> intersectionPoints, RectHV rect) {
+        if(node == null) return intersectionPoints;
+        if(rect.contains(node.p)) intersectionPoints.push(node.p);
+
+        boolean searchLeftBottom = node.isXOriented ? rect.xmin() < node.p.x() : rect.ymin() < node.p.y();
+        boolean searchRightTop = node.isXOriented ? rect.xmax() > node.p.x() : rect.ymax() > node.p.y();
+
+        if (searchLeftBottom) intersectionPoints = range(node.lb, intersectionPoints, rect);
+        if (searchRightTop) intersectionPoints = range(node.rt, intersectionPoints, rect);
+
+        return intersectionPoints;
     }
 
     // a nearest neighbor in the set to point p; null if the set is empty
