@@ -129,15 +129,16 @@ class KdTreeTest {
     void rangeContainsAllValuesInRect() {
         KdTree set = new KdTree();
 
+        set.insert(new Point2D(0,0));
+        set.insert(new Point2D(0.25,0.25));
+        set.insert(new Point2D(0.5,0.5));
+        set.insert(new Point2D(0.75,0.75));
         set.insert(new Point2D(1,1));
-        set.insert(new Point2D(2,2));
-        set.insert(new Point2D(3,3));
-        set.insert(new Point2D(4,4));
 
-        Iterable<Point2D> range = set.range(new RectHV(2.5, 2.5, 3.5, 3.5));
+        Iterable<Point2D> range = set.range(new RectHV(0.4, 0.4, 0.6, 0.6));
 
         range.forEach(point2D -> {
-            assertEquals(point2D, new Point2D(3,3));
+            assertEquals(point2D, new Point2D(0.5,0.5));
         });
     }
 
@@ -157,14 +158,15 @@ class KdTreeTest {
     void nearestReturnsNearestElement() {
         KdTree set = new KdTree();
 
+        set.insert(new Point2D(0.25,0.25));
+        set.insert(new Point2D(0,0));
         set.insert(new Point2D(1,1));
-        set.insert(new Point2D(2,2));
-        set.insert(new Point2D(3,3));
-        set.insert(new Point2D(4,4));
+        set.insert(new Point2D(0.75,0.75));
+        set.insert(new Point2D(0.5,0.5));
 
-        Point2D nearest = set.nearest(new Point2D(3.2,2.8));
+        Point2D nearest = set.nearest(new Point2D(0.6,0.6));
 
-        assertEquals(nearest, new Point2D(3,3));
+        assertEquals(nearest, new Point2D(0.5,0.5));
     }
     
 }

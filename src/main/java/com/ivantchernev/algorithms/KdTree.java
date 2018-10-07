@@ -94,13 +94,8 @@ public class KdTree {
         else                  drawLine(limitRectangle.xmax(), node.p.y(), limitRectangle.xmin(), node.p.y(), lineColor);
 
         // recurse through tree
-        if (node.isXOriented) {
-            draw(node.lb, new RectHV(limitRectangle.xmin(), limitRectangle.ymin(), node.p.x(), limitRectangle.ymax()));
-            draw(node.rt, new RectHV(node.p.x(), limitRectangle.ymin(), limitRectangle.xmax(), limitRectangle.ymax()));
-        } else {
-            draw(node.lb, new RectHV(limitRectangle.xmin(), limitRectangle.ymin(), limitRectangle.xmax(), node.p.y()));
-            draw(node.rt, new RectHV(limitRectangle.xmin(), node.p.y(), limitRectangle.xmax(), limitRectangle.ymax()));
-        }
+        draw(node.lb, getLeftBottomLimitRectangle(node, limitRectangle));
+        draw(node.rt, getRightTopLimitRectangle(node, limitRectangle));
     }
 
     private void drawPoint(Point2D p) {
@@ -126,8 +121,8 @@ public class KdTree {
     }
 
     private Stack<Point2D> range(Node node, Stack<Point2D> intersectionPoints, RectHV rect) {
-        if(node == null) return intersectionPoints;
-        if(rect.contains(node.p)) intersectionPoints.push(node.p);
+        if (node == null) return intersectionPoints;
+        if (rect.contains(node.p)) intersectionPoints.push(node.p);
 
         boolean searchLeftBottom = node.isXOriented ? rect.xmin() < node.p.x() : rect.ymin() < node.p.y();
         boolean searchRightTop = node.isXOriented ? rect.xmax() > node.p.x() : rect.ymax() > node.p.y();
@@ -142,7 +137,59 @@ public class KdTree {
     public Point2D nearest(Point2D p) {
         if (p == null) throw new IllegalArgumentException();
 
-        return null;
+        return nearest(root, new RectHV(0,0,1,1), null, p);
+    }
+
+    private Point2D nearest(Node node, RectHV nodeRect, Point2D closestPoint, Point2D queryPoint) {
+        if (node == null) return closestPoint;
+
+        if   (closestPoint == null) closestPoint = node.p;
+        else if (node.p.distanceSquaredTo(queryPoint) < closestPoint.distanceSquaredTo(queryPoint))
+            closestPoint = node.p;
+
+        closestPoint = nearestQuerySubtrees(node, nodeRect, closestPoint, queryPoint);
+
+        return closestPoint;
+    }
+
+    private Point2D nearestQuerySubtrees(Node node, RectHV nodeRect, Point2D closestPoint, Point2D queryPoint) {
+        if (node.isXOriented ? queryPoint.x() < node.p.x() : queryPoint.y() < node.p.y()) {
+            closestPoint = nearestOnLeftBottomSubTree(node, nodeRect, closestPoint, queryPoint);
+            closestPoint = nearestOnRightTopSubTree(node, nodeRect, closestPoint, queryPoint);
+        } else {
+            closestPoint = nearestOnRightTopSubTree(node, nodeRect, closestPoint, queryPoint);
+            closestPoint = nearestOnLeftBottomSubTree(node, nodeRect, closestPoint, queryPoint);
+        }
+
+        return closestPoint;
+    }
+
+    private Point2D nearestOnLeftBottomSubTree(Node node, RectHV nodeRect, Point2D closestPoint, Point2D queryPoint) {
+        RectHV leftBottomLimitRectangle = getLeftBottomLimitRectangle(node, nodeRect);
+        if (leftBottomLimitRectangle.distanceSquaredTo(queryPoint) < closestPoint.distanceSquaredTo(queryPoint)) {
+            closestPoint = nearest(node.lb, leftBottomLimitRectangle, closestPoint, queryPoint);
+        }
+        return closestPoint;
+    }
+
+    private Point2D nearestOnRightTopSubTree(Node node, RectHV nodeRect, Point2D closestPoint, Point2D queryPoint) {
+        RectHV rightTopLimitRectangle = getRightTopLimitRectangle(node, nodeRect);
+        if (rightTopLimitRectangle.distanceSquaredTo(queryPoint) < closestPoint.distanceSquaredTo(queryPoint)) {
+            closestPoint = nearest(node.rt, rightTopLimitRectangle, closestPoint, queryPoint);
+        }
+        return closestPoint;
+    }
+
+    private RectHV getLeftBottomLimitRectangle(Node node, RectHV limitRectangle) {
+        return node.isXOriented ?
+                new RectHV(limitRectangle.xmin(), limitRectangle.ymin(), node.p.x(), limitRectangle.ymax()) :
+                new RectHV(limitRectangle.xmin(), limitRectangle.ymin(), limitRectangle.xmax(), node.p.y());
+    }
+
+    private RectHV getRightTopLimitRectangle(Node node, RectHV limitRectangle) {
+        return node.isXOriented ?
+                new RectHV(node.p.x(), limitRectangle.ymin(), limitRectangle.xmax(), limitRectangle.ymax()) :
+                new RectHV(limitRectangle.xmin(), node.p.y(), limitRectangle.xmax(), limitRectangle.ymax());
     }
 
     // unit testing of the methods (optional)
@@ -152,7 +199,7 @@ public class KdTree {
         // create initial tree from file
 
         In in = new In(args[0]);
-        while(in.hasNextLine()) {
+        while (in.hasNextLine()) {
             double x = in.readDouble();
             double y = in.readDouble();
             tree.insert(new Point2D(x, y));
