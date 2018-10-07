@@ -77,9 +77,6 @@ public class PointSET {
     public static void main(String[] args) {
         PointSET set = new PointSET();
 
-        StdDraw.setXscale(-0.1, 1.1);
-        StdDraw.setYscale(-0.1, 1.1);
-
         // create initial tree from file
 
         In in = new In(args[0]);
@@ -89,6 +86,13 @@ public class PointSET {
             set.insert(new Point2D(x, y));
         }
 
+        // Drawing
+
+        StdDraw.setXscale(-0.1, 1.1);
+        StdDraw.setYscale(-0.1, 1.1);
+
         set.draw();
     }
+
+
 }
