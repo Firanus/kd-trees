@@ -1,10 +1,8 @@
 package com.ivantchernev.algorithms;
 
 import java.util.TreeSet;
-import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.Stack;
-import edu.princeton.cs.algs4.StdDraw;
+
+import edu.princeton.cs.algs4.*;
 
 public class PointSET {
 
@@ -44,17 +42,7 @@ public class PointSET {
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
 
-        double minx= Double.MAX_VALUE;
-        double miny = Double.MAX_VALUE;
-        double maxx = -Double.MAX_VALUE;
-        double maxy = -Double.MAX_VALUE;
-
         for (Point2D p : treeSet) {
-            if (p.x() < minx) minx = p.x();
-            if (p.y() < miny) miny = p.y();
-            if (p.x() > maxx) maxx = p.x();
-            if (p.y() > maxy) maxy = p.y();
-
             p.draw();
         }
     }
@@ -89,9 +77,17 @@ public class PointSET {
     public static void main(String[] args) {
         PointSET set = new PointSET();
 
-        set.insert(new Point2D(0.2,0.7));
-        set.insert(new Point2D(0.5,0.5));
-        set.insert(new Point2D(0.8,0.2));
+        StdDraw.setXscale(-0.1, 1.1);
+        StdDraw.setYscale(-0.1, 1.1);
+
+        // create initial tree from file
+
+        In in = new In(args[0]);
+        while(in.hasNextLine()) {
+            double x = in.readDouble();
+            double y = in.readDouble();
+            set.insert(new Point2D(x, y));
+        }
 
         set.draw();
     }
