@@ -1,15 +1,18 @@
 package com.ivantchernev.algorithms;
 
-import edu.princeton.cs.algs4.*;
-
-import java.awt.*;
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.In;
 
 public class KdTree {
 
-    private static class Node {
-        private static final boolean X_ORIENTED = true;
-        private static final boolean Y_ORIENTED = false;
+    private Node root;
 
+    private enum Color { BLACK, RED, BLUE }
+
+    private static class Node {
         private final Point2D p;      // the point
         private final boolean isXOriented; // is this node x or y oriented?
         private Node lb;        // the left/bottom subtree
@@ -20,8 +23,6 @@ public class KdTree {
             this.isXOriented = isXOriented;
         }
     }
-
-    private Node root;
 
     // construct an empty set of points
     public KdTree() { }
@@ -76,11 +77,11 @@ public class KdTree {
 
     // draw all points to standard draw
     public void draw() {
-        drawLine(0,0,1,0, StdDraw.BLACK);
-        drawLine(0,0,0,1, StdDraw.BLACK);
-        drawLine(0,1,1,1, StdDraw.BLACK);
-        drawLine(1,0,1,1, StdDraw.BLACK);
-        draw(root, new RectHV(0,0,1,1));
+        drawLine(0, 0, 1, 0, Color.BLACK);
+        drawLine(0, 0, 0, 1, Color.BLACK);
+        drawLine(0, 1, 1, 1, Color.BLACK);
+        drawLine(1, 0, 1, 1, Color.BLACK);
+        draw(root, new RectHV(0, 0, 1, 1));
     }
 
     private void draw(Node node, RectHV limitRectangle) {
@@ -89,7 +90,7 @@ public class KdTree {
         // drawing code
         drawPoint(node.p);
 
-        Color lineColor = node.isXOriented ? StdDraw.RED : StdDraw.BLUE;
+        Color lineColor = node.isXOriented ? Color.RED : Color.BLUE;
         if (node.isXOriented) drawLine(node.p.x(), limitRectangle.ymax(), node.p.x(), limitRectangle.ymin(), lineColor);
         else                  drawLine(limitRectangle.xmax(), node.p.y(), limitRectangle.xmin(), node.p.y(), lineColor);
 
@@ -106,10 +107,23 @@ public class KdTree {
     }
 
     private void drawLine(double x0, double y0, double x1, double y1, Color color) {
-        StdDraw.setPenColor(color);
+        setPenColor(color);
         StdDraw.setPenRadius(0.001);
-
         StdDraw.line(x0,y0,x1,y1);
+    }
+
+    private void setPenColor(Color color) {
+        switch (color) {
+            case RED:
+                StdDraw.setPenColor(StdDraw.RED);
+                break;
+            case BLUE:
+                StdDraw.setPenColor(StdDraw.BLUE);
+                break;
+            case BLACK:
+                StdDraw.setPenColor(StdDraw.BLACK);
+                break;
+        }
     }
 
     // all points that are inside the rectangle (or on the boundary)
@@ -137,7 +151,7 @@ public class KdTree {
     public Point2D nearest(Point2D p) {
         if (p == null) throw new IllegalArgumentException();
 
-        return nearest(root, new RectHV(0,0,1,1), null, p);
+        return nearest(root, new RectHV(0, 0, 1, 1), null, p);
     }
 
     private Point2D nearest(Node node, RectHV nodeRect, Point2D closestPoint, Point2D queryPoint) {

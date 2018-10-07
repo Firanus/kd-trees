@@ -2,11 +2,15 @@ package com.ivantchernev.algorithms;
 
 import java.util.TreeSet;
 
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.In;
 
 public class PointSET {
 
-    private TreeSet<Point2D> treeSet;
+    private final TreeSet<Point2D> treeSet;
 
     // construct an empty set of points
     public PointSET() {
@@ -63,7 +67,7 @@ public class PointSET {
         if (p == null) throw new IllegalArgumentException();
 
         Point2D nearestPoint = null;
-        double closestDistanceSquared = Double.MAX_VALUE;
+        double closestDistanceSquared = Double.POSITIVE_INFINITY;
         for (Point2D storedPoint: treeSet) {
             if (p.distanceSquaredTo(storedPoint) < closestDistanceSquared) {
                 nearestPoint = storedPoint;
@@ -73,26 +77,4 @@ public class PointSET {
 
         return nearestPoint;
     }
-
-    public static void main(String[] args) {
-        PointSET set = new PointSET();
-
-        // create initial tree from file
-
-        In in = new In(args[0]);
-        while(in.hasNextLine()) {
-            double x = in.readDouble();
-            double y = in.readDouble();
-            set.insert(new Point2D(x, y));
-        }
-
-        // Drawing
-
-        StdDraw.setXscale(-0.1, 1.1);
-        StdDraw.setYscale(-0.1, 1.1);
-
-        set.draw();
-    }
-
-
 }
